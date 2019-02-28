@@ -24,75 +24,35 @@ def configreader(configfile):
 #
 
 
+# After dicussion, we decided to put all tools into a single
+# class, since we decided that we were using new tools as
+# subclasses for specialization, rather than a new functionality.
+# Our subclasses were basically data holders, which is now managed
+# by the Tool superclass
 class Tool:
-    def __init__(self, name):
+
+    def __init__(self, name, count):
+        # Get config parameters and access price
         config_file = get_config_name()
         config = configreader(config_file)
         self.price = config['tool'][name]['price']
 
-    def set_price(self, price):
-        self.price = price
-
-
-class Painting(Tool):
-    num_tools = 0
-
-    def __init__(self):
-        self.name = "painting"
-        super(Painting, self).__init__(self.name)
-        self.num_tools += 1
-        self.tool_name = "Painting tool {}".format(self.num_tools)
-
-
-class Concrete(Tool):
-    num_tools = 0
-
-    def __init__(self):
-        self.name = "concrete"
-        super(Concrete, self).__init__(self.name)
-        self.num_tools += 1
-        self.tool_name = "Concrete tool {}".format(self.num_tools)
-
-
-class Plumbing(Tool):
-    num_tools = 0
-
-    def __init__(self):
-        self.name = "plumbing"
-        super(Plumbing, self).__init__(self.name)
-        self.num_tools += 1
-        self.tool_name = "Plumbing tool {}".format(self.num_tools)
-
-
-class Woodwork(Tool):
-    num_tools = 0
-
-    def __init__(self):
-        self.name = "woodwork"
-        super(Woodwork, self).__init__(self.name)
-        self.num_tools += 1
-        self.tool_name = "Woodwork tool {}".format(self.num_tools)
-
-
-class Yardwork(Tool):
-    num_tools = 0
-
-    def __init__(self):
-        self.name = "yardwork"
-        super(Yardwork, self).__init__(self.name)
-        self.num_tools += 1
-        self.tool_name = "Yardwork tool {}".format(self.num_tools)
+        # Assign unique tool name. Let the store manage the
+        # names of the tools, and the tool will keep track of itself
+        self.tool_type = name
+        self.tool_name = "{0} tool {1}".format(self.tool_type, count)
+        print(self.tool_name)
 
 
 class Store:
     def build_inventory(self):
         self.inventory = []
 
-        PaintingTools = self.inventory.append([Painting() for _ in range(4)])
-        ConcreteTools = self.inventory.append([Concrete() for _ in range(4)])
-        PlumbingTools = self.inventory.append([Plumbing() for _ in range(4)])
-        WoodworkTools = self.inventory.append([Woodwork() for _ in range(4)])
-        YardworkTools = self.inventory.append([Yardwork() for _ in range(4)])
+        self.inventory.append([Tool("painting", i+1) for i in range(4)])
+        self.inventory.append([Tool("concrete", i+1) for i in range(4)])
+        self.inventory.append([Tool("plumbing", i+1) for i in range(4)])
+        self.inventory.append([Tool("woodwork", i+1) for i in range(4)])
+        self.inventory.append([Tool("yardwork", i+1) for i in range(4)])
 
     def cycle_day(self):
         pass
@@ -102,9 +62,14 @@ class Rental:
     pass
 
 
-if __name__ == '__main__':
+def main():
     config_file = get_config_name()
     config = configreader(config_file)
     store = Store()
+    store.build_inventory()
     for _ in range(config['simulation']['num_days']):
         store.cycle_day()
+
+
+if __name__ == '__main__':
+    main()
