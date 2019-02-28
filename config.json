@@ -1,0 +1,28 @@
+{
+    "tool":{
+        "rental_limit_nights":7,
+        "painting":{"price":3},
+        "concrete":{"price":5},
+        "plumbing":{"price":9},
+        "woodwork":{"price":15},
+        "yardwork":{"price":20}
+    },
+    "customer":{
+        "max_num_tools": 3,
+        "casual":{
+          "num_tools": [1, 2],
+          "num_nights": [1, 2]
+        },
+        "business":{
+          "num_tools": [3],
+          "num_nights": [7]
+          },
+        "regular":{
+          "num_tools": [1, 2, 3],
+          "num_nights": [3, 4, 5]
+        }
+    },
+    "simulation":{
+        "num_days": 35
+    }
+}
