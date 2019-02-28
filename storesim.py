@@ -99,7 +99,31 @@ class Store:
 
 
 class Rental:
-    pass
+
+    def __init__(self, days_remaining, tools):
+        self.days_remaining = days_remaining
+        self.tools = tools     # tools is a list of Tools
+
+
+class Customer:
+    max_num_tools    = config['customer']['max_num_tools']
+    num_tools_rented = 0
+
+    def create_rental(self):
+        if self.num_tools_rented < max_num_tools:
+        
+
+class CasualCustomer(Customer):
+    num_tools  = config['customer']['casual']['num_tools']
+    num_nights = config['customer']['casual']['num_nights']
+
+class BusinessCustomer(Customer):
+    num_tools  = config['customer']['business']['num_tools']
+    num_nights = config['customer']['business']['num_nights']
+
+class RegularCustomer(Customer):
+    num_tools  = config['customer']['regular']['num_tools']
+    num_nights = config['customer']['regular']['num_nights']
 
 
 if __name__ == '__main__':
