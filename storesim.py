@@ -111,11 +111,18 @@ class Store:
 class Rental:
 
     def __init__(self, days_remaining, tools, customer_name):
-        self.days_remaining = days_remaining
+        self.__days_remaining = days_remaining
         self.rental_length  = days_remaining
         self.tools          = tools
         self.price          = sum([tool.price*days_remaining for tool in tools])
         self.customer_name  = customer_name
+
+    @property
+    def days_remaining(self):
+        return self.__days_remaining
+
+    def decrement_days(self):
+        self.__days_remaining -= 1
 
 
 class Customer:
@@ -131,7 +138,7 @@ class Customer:
     def create_rental(self, tools):
         can_rent = self.max_num_tools - self.num_tools_rented
         if can_rent > 0 and can_rent <= len(tools):
-            #num_tools = random.randint(1, can_rent)
+            # num_tools = random.randint(1, can_rent)
             # pick a preferred number of tools based on customer type
             # to follow requirements of assignment
             num_tools = random.choice(self.preferred_num_tools)
@@ -156,7 +163,7 @@ class Customer:
         returned_tools   = []
         returned_rentals = []
         for rental in self.rentals:
-            rental.days_remaining -= 1
+            rental.decrement_days()
             if rental.days_remaining <= 0:
                 returned_tools   += rental.tools
                 returned_rentals.append(rental)
