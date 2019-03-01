@@ -12,16 +12,16 @@
         "max_num_tools": 3,
         "types": ["casual", "business", "regular"],
         "casual":{
-          "num_tools": [1, 2],
-          "num_nights": [1, 2]
+          "preferred_num_tools": [1, 2],
+          "preferred_num_nights": [1, 2]
         },
         "business":{
-          "num_tools": [3],
-          "num_nights": [7]
+          "preferred_num_tools": [3],
+          "preferred_num_nights": [7]
           },
         "regular":{
-          "num_tools": [1, 2, 3],
-          "num_nights": [3, 4, 5]
+          "preferred_num_tools": [1, 2, 3],
+          "preferred_num_nights": [3, 4, 5]
         }
     },
     "simulation":{
