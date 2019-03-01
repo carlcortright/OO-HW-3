@@ -43,6 +43,9 @@ class Tool:
         self.tool_type = type_str
         self.tool_name = "{0} tool {1}".format(self.tool_type, count)
 
+    def get_name(self):
+        return self.tool_name
+
     def __eq__(self, other):
         return self.tool_name == other.tool_name
 
@@ -77,44 +80,48 @@ class Store:
             self.returned_rentals += returned_rentals
 
         # Then create new rentals for the next day
+        random.shuffle(self.customers)
         for customer in self.customers:
             rental        = customer.create_rental(self.inventory)
-            self.revenue += rental.price
+            self.revenue += rental.get_price()
 
     def print_summary(self):
         print("Tools currently in the store (not rented):")
         for tool in self.inventory:
-            print(tool.tool_name)
+            print(tool.get_name())
         print("{} tools are currently in the store".format(len(self.inventory)))
         print("======================================")
-        print("Amount of money the store made: ${}".format(self.revenue))
+        print("Amount of money the store made: ${:.2f}".format(self.revenue))
         print("======================================")
         print("Summaries of returned rentals:")
 
         for rental in self.returned_rentals:
-            tools = rental.tools
-            print("Tools rented: {}".format(", ".join(tool.tool_name for tool in tools)))
-            print("Total price of rental: {}".format(rental.price))
-            print("Name of renter: {}".format(rental.customer_name))
+            tools = rental.get_tools()
+            print("Tools rented: {}".format(", ".join(tool.get_name() for tool in tools)))
+            print("Total price of rental: {}".format(rental.get_price()))
+            print("Name of renter: {}".format(rental.get_customer()))
             print("======================================")
 
         print("Summaries of current rentals:")
         for customer in self.customers:
-            for rental in customer.rentals:
-                tools = rental.tools
-                print("Tools rented: {}".format(", ".join(tool.tool_name for tool in tools)))
-                print("Total price of rental: {}".format(rental.price))
-                print("Name of renter: {}".format(rental.customer_name))
+            for rental in customer.get_rentals():
+                tools = rental.get_tools()
+                print("Tools rented: {}".format(", ".join(tool.get_name() for tool in tools)))
+                print("Total price of rental: {}".format(rental.get_price()))
+                print("Name of renter: {}".format(rental.get_customer()))
                 print("======================================")
 
 
+# A class that dumbly holds and gives back information about a rental.
+# Also decrements the number of days remaining for a rental. This
+# Mostly helps the customer keep track of their multiple rentals
 class Rental:
 
     def __init__(self, days_remaining, tools, customer_name):
         self.__days_remaining = days_remaining
         self.rental_length  = days_remaining
         self.tools          = tools
-        self.price          = sum([tool.price*days_remaining for tool in tools])
+        self.price        = sum([tool.price*days_remaining for tool in tools])
         self.customer_name  = customer_name
 
     @property
@@ -123,6 +130,15 @@ class Rental:
 
     def decrement_days(self):
         self.__days_remaining -= 1
+
+    def get_price(self):
+        return self.price
+
+    def get_tools(self):
+        return self.tools
+
+    def get_customer(self):
+        return self.customer_name
 
 
 class Customer:
@@ -134,6 +150,9 @@ class Customer:
         self.config        = configreader(config_file)
         self.max_num_tools = self.config['customer']['max_num_tools']
         self.name          = "{0} Customer {1}".format(type, id)
+
+    def get_rentals(self):
+        return self.rentals
 
     def create_rental(self, tools):
         can_rent = self.max_num_tools - self.num_tools_rented
