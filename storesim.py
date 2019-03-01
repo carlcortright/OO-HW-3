@@ -1,4 +1,5 @@
 import json
+import random
 import argparse
 import random
 
@@ -46,6 +47,42 @@ class Tool:
 	def __eq__(self, other):
 		return self.tool_name == other.tool_name
 
+class Customer:
+    num_tools_rented = 0
+
+    def __init__(self, type, id):
+        config_file        = get_config_name()
+        self.config        = configreader(config_file)
+        self.max_num_tools = self.config['customer']['max_num_tools']
+        self.name          = "{0} Customer {1}".format(type, id)
+
+
+    def create_rental(self):
+        if self.num_tools_rented < self.max_num_tools:
+            pass
+
+    def cycle_day(self):
+        pass
+
+
+class CasualCustomer(Customer):
+    def __init__(self, id):
+        super(CasualCustomer, self).__init__("Casual", id)
+        self.num_tools  = self.config['customer']['casual']['num_tools']
+        self.num_nights = self.config['customer']['casual']['num_nights']
+
+
+class BusinessCustomer(Customer):
+    def __init__(self, id):
+        super(BusinessCustomer, self).__init__("Business", id)
+        self.num_tools  = self.config['customer']['business']['num_tools']
+        self.num_nights = self.config['customer']['business']['num_nights']
+
+class RegularCustomer(Customer):
+    def __init__(self, id):
+        super(RegularCustomer, self).__init__("Regular", id)
+        self.num_tools  = self.config['customer']['regular']['num_tools']
+        self.num_nights = self.config['customer']['regular']['num_nights']
 
 class Store:
 
@@ -57,9 +94,9 @@ class Store:
 
 	def create_customers(self):
 		self.customers = []
-		self.customers += [CasualCustomer() for i in range(3)]
-		self.customers += [RegularCustomer() for i in range(3)]
-		self.customers += [BusinessCustomer() for i in range(4)]
+		self.customers += [CasualCustomer(i+1) for i in range(3)]
+		self.customers += [RegularCustomer(i+1) for i in range(3)]
+		self.customers += [BusinessCustomer(i+1) for i in range(4)]
 
 	def build_inventory(self):
 		self.inventory = []
@@ -81,6 +118,7 @@ class Store:
 
 class Rental:
 
+<<<<<<< HEAD
 	def __init__(self, days_remaining, tools):
 		self.days_remaining = days_remaining
 		self.tools = tools     # tools is a list of Tools
@@ -128,23 +166,22 @@ class CasualCustomer(Customer):
         super(CasualCustomer, self).__init__()
         self.num_tools = self.config['customer']['casual']['num_tools']
         self.num_nights = self.config['customer']['casual']['num_nights']
+=======
+    tools = []
+    price = 0
+>>>>>>> d463ed6d4ef8a35bd3daedd8cf0eca8f1f25785c
+
+    def __init__(self, rental_begin_day):
+        self.days_remaining = rental_begin_day
+
+    def add_tool(self, tool):
+        pass
 
 
-class BusinessCustomer(Customer):
-    def __init__(self):
-        super(BusinessCustomer, self).__init__()
-        self.num_tools  = self.config['customer']['business']['num_tools']
-        self.num_nights = self.config['customer']['business']['num_nights']
-
-
-class RegularCustomer(Customer):
-    def __init__(self):
-        super(RegularCustomer, self).__init__()
-        self.num_tools  = self.config['customer']['regular']['num_tools']
-        self.num_nights = self.config['customer']['regular']['num_nights']
 
 
 def main():
+<<<<<<< HEAD
 	config_file = get_config_name()
 	config = configreader(config_file)
 	store = Store()
@@ -152,6 +189,13 @@ def main():
 	for _ in range(config['simulation']['num_days']):
 		store.cycle_day()
 	print(store.revenue)
+=======
+    config_file = get_config_name()
+    config = configreader(config_file)
+    store = Store()
+    for _ in range(config['simulation']['num_days']):
+        store.cycle_day()
+>>>>>>> d463ed6d4ef8a35bd3daedd8cf0eca8f1f25785c
 
 
 if __name__ == '__main__':
