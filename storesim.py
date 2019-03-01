@@ -32,19 +32,20 @@ def configreader(configfile):
 # by the Tool superclass
 class Tool:
 
-	def __init__(self, type_str, count):
-		# Get config parameters and access price
-		config_file = get_config_name()
-		config      = configreader(config_file)
-		self.price  = config['tool'][type_str]['price']
+    def __init__(self, type_str, count):
+        # Get config parameters and access price
+        config_file = get_config_name()
+        config      = configreader(config_file)
+        self.price  = config['tool'][type_str]['price']
 
-		# Assign unique tool name. Let the store manage the
-		# names of the tools, and the tool will keep track of itself
-		self.tool_type = type_str
-		self.tool_name = "{0} tool {1}".format(self.tool_type, count)
+        # Assign unique tool name. Let the store manage the
+        # names of the tools, and the tool will keep track of itself
+        self.tool_type = type_str
+        self.tool_name = "{0} tool {1}".format(self.tool_type, count)
 
-	def __eq__(self, other):
-		return self.tool_name == other.tool_name
+    def __eq__(self, other):
+        return self.tool_name == other.tool_name
+
 
 class Store:
 
@@ -75,7 +76,7 @@ class Store:
             self.inventory += returned_tools
             self.returned_rentals += returned_rentals
 
-		# Then create new rentals for the next day
+        # Then create new rentals for the next day
         for customer in self.customers:
             rental        = customer.create_rental(self.inventory)
             self.revenue += rental.price
@@ -107,7 +108,6 @@ class Store:
                 print("======================================")
 
 
-
 class Rental:
 
     def __init__(self, days_remaining, tools, customer_name):
@@ -116,6 +116,7 @@ class Rental:
         self.tools          = tools
         self.price          = sum([tool.price*days_remaining for tool in tools])
         self.customer_name  = customer_name
+
 
 class Customer:
     num_tools_rented = 0
@@ -130,7 +131,7 @@ class Customer:
     def create_rental(self, tools):
         can_rent = self.max_num_tools - self.num_tools_rented
         if can_rent > 0 and can_rent <= len(tools):
-			#num_tools = random.randint(1, can_rent)
+            #num_tools = random.randint(1, can_rent)
             # pick a preferred number of tools based on customer type
             # to follow requirements of assignment
             num_tools = random.choice(self.preferred_num_tools)
@@ -142,7 +143,7 @@ class Customer:
                 tool = random.choice(tools)
                 tools.remove(tool)
                 rental_tools.append(tool)
-			#days = random.randint(1,7)
+            #days = random.randint(1,7)
             # again, we should pick preferred_num_nights
             days = random.choice(self.preferred_num_nights)
             rental = Rental(days, rental_tools, self.name)
@@ -150,7 +151,6 @@ class Customer:
             return rental
         else:
             return Rental(0, [], '')
-
 
     def check_returns(self):
         returned_tools   = []
@@ -164,6 +164,7 @@ class Customer:
 
         return returned_tools, returned_rentals
 
+
 class CasualCustomer(Customer):
     def __init__(self, id):
         super(CasualCustomer, self).__init__("Casual", id)
@@ -176,6 +177,7 @@ class BusinessCustomer(Customer):
         super(BusinessCustomer, self).__init__("Business", id)
         self.preferred_num_tools  = self.config['customer']['business']['preferred_num_tools']
         self.preferred_num_nights = self.config['customer']['business']['preferred_num_nights']
+
 
 class RegularCustomer(Customer):
     def __init__(self, id):
