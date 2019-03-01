@@ -86,15 +86,8 @@ class Store:
             self.revenue += rental.get_price()
 
     def print_summary(self):
-        print("Tools currently in the store (not rented):")
-        for tool in self.inventory:
-            print(tool.get_name())
-        print("{} tools are currently in the store".format(len(self.inventory)))
-        print("======================================")
-        print("Amount of money the store made: ${:.2f}".format(self.revenue))
-        print("======================================")
+        
         print("Summaries of returned rentals:")
-
         for rental in self.returned_rentals:
             tools = rental.get_tools()
             print("Tools rented: {}".format(", ".join(tool.get_name() for tool in tools)))
@@ -104,12 +97,15 @@ class Store:
 
         print("Summaries of current rentals:")
         for customer in self.customers:
-            for rental in customer.get_rentals():
-                tools = rental.get_tools()
-                print("Tools rented: {}".format(", ".join(tool.get_name() for tool in tools)))
-                print("Total price of rental: {}".format(rental.get_price()))
-                print("Name of renter: {}".format(rental.get_customer()))
-                print("======================================")
+            customer.print_current_rentals()
+
+        print("Tools currently in the store (not rented):")
+        for tool in self.inventory:
+            print(tool.get_name())
+        print("{} tools are currently in the store".format(len(self.inventory)))
+        print("======================================")
+        print("Amount of money the store made: ${:.2f}".format(self.revenue))
+        
 
 
 # A class that dumbly holds and gives back information about a rental.
@@ -154,10 +150,14 @@ class Customer:
     def get_rentals(self):
         return self.rentals
 
+    # 
+    # Creates a rental for the customer using their specific desired quantities. 
+    # Returns that rental so the caller can account for any tools that have been
+    # rented.
+    # 
     def create_rental(self, tools):
         can_rent = self.max_num_tools - self.num_tools_rented
         if can_rent > 0 and can_rent <= len(tools):
-            # num_tools = random.randint(1, can_rent)
             # pick a preferred number of tools based on customer type
             # to follow requirements of assignment
             num_tools = random.choice(self.preferred_num_tools)
@@ -169,7 +169,6 @@ class Customer:
                 tool = random.choice(tools)
                 tools.remove(tool)
                 rental_tools.append(tool)
-            #days = random.randint(1,7)
             # again, we should pick preferred_num_nights
             days = random.choice(self.preferred_num_nights)
             rental = Rental(days, rental_tools, self.name)
@@ -178,6 +177,11 @@ class Customer:
         else:
             return Rental(0, [], '')
 
+    # 
+    # Method that has the customer check if any of their rentals need to be returned. 
+    # If a rental needs to be returned it is removed from the rentals and the tools 
+    # are returned. 
+    # 
     def check_returns(self):
         returned_tools   = []
         returned_rentals = []
@@ -189,6 +193,14 @@ class Customer:
                 self.rentals.remove(rental)
 
         return returned_tools, returned_rentals
+
+    def print_current_rentals(self):
+        for rental in self.get_rentals():
+            tools = rental.get_tools()
+            print("Tools rented: {}".format(", ".join(tool.get_name() for tool in tools)))
+            print("Total price of rental: {}".format(rental.get_price()))
+            print("Name of renter: {}".format(rental.get_customer()))
+            print("======================================")
 
 
 class CasualCustomer(Customer):
