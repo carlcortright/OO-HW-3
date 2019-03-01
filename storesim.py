@@ -46,38 +46,37 @@ class Tool:
 class Customer:
     num_tools_rented = 0
 
-    def __init__(self, name):
+    def __init__(self, type, id):
         config_file        = get_config_name()
         self.config        = configreader(config_file)
         self.max_num_tools = self.config['customer']['max_num_tools']
-        self.name          = "Customer {0}".format(name)
-        print(self.name)
+        self.name          = "{0} Customer {1}".format(type, id)
 
 
     def create_rental(self):
         if self.num_tools_rented < self.max_num_tools:
             pass
 
-	def cycle_day(self):
-		pass
+    def cycle_day(self):
+        pass
 
 
 class CasualCustomer(Customer):
-    def __init__(self, name):
-        super(CasualCustomer, self).__init__(name)
+    def __init__(self, id):
+        super(CasualCustomer, self).__init__("Casual", id)
         self.num_tools  = self.config['customer']['casual']['num_tools']
         self.num_nights = self.config['customer']['casual']['num_nights']
 
 
 class BusinessCustomer(Customer):
-    def __init__(self, name):
-        super(BusinessCustomer, self).__init__(name)
+    def __init__(self, id):
+        super(BusinessCustomer, self).__init__("Business", id)
         self.num_tools  = self.config['customer']['business']['num_tools']
         self.num_nights = self.config['customer']['business']['num_nights']
 
 class RegularCustomer(Customer):
-    def __init__(self, name):
-        super(RegularCustomer, self).__init__(name)
+    def __init__(self, id):
+        super(RegularCustomer, self).__init__("Regular", id)
         self.num_tools  = self.config['customer']['regular']['num_tools']
         self.num_nights = self.config['customer']['regular']['num_nights']
 
