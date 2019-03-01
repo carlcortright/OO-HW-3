@@ -31,31 +31,43 @@ def configreader(configfile):
 # by the Tool superclass
 class Tool:
 
-    def __init__(self, name, count):
+    def __init__(self, type_str, count):
         # Get config parameters and access price
         config_file = get_config_name()
         config = configreader(config_file)
-        self.price = config['tool'][name]['price']
+        self.price = config['tool'][type_str]['price']
 
         # Assign unique tool name. Let the store manage the
         # names of the tools, and the tool will keep track of itself
-        self.tool_type = name
+        self.tool_type = type_str
         self.tool_name = "{0} tool {1}".format(self.tool_type, count)
-        print(self.tool_name)
 
 
 class Store:
-    def build_inventory(self):
-        self.inventory = []
 
-        self.inventory.append([Tool("painting", i+1) for i in range(4)])
-        self.inventory.append([Tool("concrete", i+1) for i in range(4)])
-        self.inventory.append([Tool("plumbing", i+1) for i in range(4)])
-        self.inventory.append([Tool("woodwork", i+1) for i in range(4)])
-        self.inventory.append([Tool("yardwork", i+1) for i in range(4)])
+	def __init__(self):
+		self.build_inventory()
+		self.create_customers()
+		self.rentals = list()
 
-    def cycle_day(self):
-        pass
+	def create_customers(self):
+		self.customers = []
+		self.customers += [CasualCustomer() for i in range(3)]
+		self.customers += [RegularCustomer() for i in range(3)]
+		self.customers += [BusinessCustomer() for i in range(4)]
+
+	def build_inventory(self):
+		self.inventory = []
+
+		self.inventory += [Tool("painting", i+1) for i in range(4)]
+		self.inventory += [Tool("concrete", i+1) for i in range(4)]
+		self.inventory += [Tool("plumbing", i+1) for i in range(4)]
+		self.inventory += [Tool("woodwork", i+1) for i in range(4)]
+		self.inventory += [Tool("yardwork", i+1) for i in range(4)]
+
+	def cycle_day(self):
+		for customer in self.customers:
+			customer.cycle_day()
 
 
 class Rental:
@@ -76,6 +88,9 @@ class Customer:
     def create_rental(self):
         if self.num_tools_rented < self.max_num_tools:
             pass
+	
+	def cycle_day(self):
+		pass
         
 
 class CasualCustomer(Customer):
